@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+*.whl
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# PyCharm / JetBrains
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Training artifacts
+*.pt
+*.pth
+*.bin
+*.ckpt
+data/
+
+# Misc
+*.log
