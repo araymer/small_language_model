@@ -10,16 +10,20 @@ class Neuron:
     """
 
     def __init__(self, n_inputs, activation='tanh'):
-        """Initialize with random weights and zero bias."""
-        raise NotImplementedError
+        self.w = [Value(random.uniform(-1, 1)) for _ in range(n_inputs)]
+        self.b = Value(0.0)
+        self.activation = activation
 
     def __call__(self, x):
-        """Forward pass: dot product + bias, then activation."""
-        raise NotImplementedError
+        act = sum((wi * xi for wi, xi in zip(self.w, x)), self.b)
+        if self.activation == 'tanh':
+            return act.tanh()
+        elif self.activation == 'relu':
+            return act.relu()
+        return act
 
     def parameters(self):
-        """Return list of all tunable Values (weights + bias)."""
-        raise NotImplementedError
+        return self.w + [self.b]
 
 
 class Layer:
@@ -28,16 +32,14 @@ class Layer:
     """
 
     def __init__(self, n_inputs, n_outputs, **kwargs):
-        """Create n_outputs neurons, each with n_inputs inputs."""
-        raise NotImplementedError
+        self.neurons = [Neuron(n_inputs, **kwargs) for _ in range(n_outputs)]
 
     def __call__(self, x):
-        """Forward pass: run each neuron on the input."""
-        raise NotImplementedError
+        out = [n(x) for n in self.neurons]
+        return out[0] if len(out) == 1 else out
 
     def parameters(self):
-        """Return all parameters from all neurons."""
-        raise NotImplementedError
+        return [p for n in self.neurons for p in n.parameters()]
 
 
 class MLP:
@@ -45,19 +47,19 @@ class MLP:
     Multi-layer perceptron: a stack of Layers.
 
     Example: MLP(3, [4, 4, 1]) creates:
-      - Layer 1: 3 inputs → 4 outputs
-      - Layer 2: 4 inputs → 4 outputs
-      - Layer 3: 4 inputs → 1 output
+      - Layer 1: 3 inputs -> 4 outputs
+      - Layer 2: 4 inputs -> 4 outputs
+      - Layer 3: 4 inputs -> 1 output
     """
 
     def __init__(self, n_inputs, layer_sizes):
-        """Build the stack of layers."""
-        raise NotImplementedError
+        sizes = [n_inputs] + layer_sizes
+        self.layers = [Layer(sizes[i], sizes[i + 1]) for i in range(len(layer_sizes))]
 
     def __call__(self, x):
-        """Forward pass: run input through each layer sequentially."""
-        raise NotImplementedError
+        for layer in self.layers:
+            x = layer(x)
+        return x
 
     def parameters(self):
-        """Return all parameters from all layers."""
-        raise NotImplementedError
+        return [p for layer in self.layers for p in layer.parameters()]
