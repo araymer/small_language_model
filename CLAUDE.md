@@ -44,12 +44,13 @@ SML/
 ## Syllabus
 
 ### Phase 1: Micrograd — Autograd & Backprop Fundamentals
-- [ ] Implement `Value` class with basic ops (+, *, etc.)
-- [ ] Implement backward pass (reverse-mode autodiff)
-- [ ] Build a simple neuron / MLP using Value
-- [ ] Train on a toy problem (e.g., simple classification)
+- [x] Implement `Value` class with basic ops (+, *, etc.)
+- [x] Implement backward pass (reverse-mode autodiff)
+- [x] Verify gradients against PyTorch
+- [x] Build a simple neuron / MLP using Value
+- [x] Train on a toy problem (e.g., simple classification)
 - [ ] Visualize the computation graph
-- [ ] **Checkpoint**: Understand chain rule, computational graphs, gradient flow
+- [x] **Checkpoint**: Understand chain rule, computational graphs, gradient flow
 
 ### Phase 2: Tokenizer
 - [ ] Character-level tokenizer (encode/decode)
@@ -96,5 +97,5 @@ SML/
 ---
 
 ## Current Status
-**Phase**: Pre-Phase 1 (project setup)
-**Last completed**: Initial repo setup, dependencies installed, pushed to GitHub
+**Phase**: Phase 1 nearly complete (graph visualization remaining)
+**Last completed**: Value autograd engine, gradient verification, Neuron/Layer/MLP, toy training loop converges

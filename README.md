@@ -1,5 +1,7 @@
 # Small Language Model (SML)
 
+Training implementation.
+
 A GPT-style transformer language model implemented from scratch for learning purposes.
 
 ## Goals
