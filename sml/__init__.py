@@ -1,2 +1,2 @@
 from sml.model import GPT
-from sml.tokenizer import Tokenizer
+from sml.tokenizer import BPETokenizer

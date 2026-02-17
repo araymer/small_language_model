@@ -1,30 +1,4 @@
-class Tokenizer:
-    """
-    Converts text to sequences of integers and back.
-
-    Phase 1: Character-level (each unique character = one token)
-    Phase 2: Byte Pair Encoding (BPE) for subword tokenization
-    """
-
-    def __init__(self):
-        """Build vocabulary from training text."""
-        raise NotImplementedError
-
-    def encode(self, text):
-        """Convert a string to a list of integer token IDs."""
-        raise NotImplementedError
-
-    def decode(self, token_ids):
-        """Convert a list of integer token IDs back to a string."""
-        raise NotImplementedError
-
-    @property
-    def vocab_size(self):
-        """Number of unique tokens in the vocabulary."""
-        raise NotImplementedError
-
-
-class BPETokenizer(Tokenizer):
+class BPETokenizer:
     """
     Byte Pair Encoding tokenizer.
 
@@ -32,21 +6,69 @@ class BPETokenizer(Tokenizer):
     the most frequent adjacent pairs into new tokens.
     """
 
-    def train(self, text, vocab_size):
-        """
-        Learn BPE merges from training text.
+    def __init__(self):
+        self.merges = {}        # (id1, id2) -> merged_id
+        self.vocab = {}         # id -> string
+        self.inverse_vocab = {} # string -> id
 
-        1. Start with character-level vocabulary
-        2. Count all adjacent token pairs
-        3. Merge the most frequent pair into a new token
-        4. Repeat until desired vocab_size is reached
-        """
-        raise NotImplementedError
+    def train(self, text, vocab_size):
+        # Build initial character-level vocabulary
+        chars = sorted(set(text))
+        self.vocab = {i: c for i, c in enumerate(chars)}
+        self.inverse_vocab = {c: i for i, c in enumerate(chars)}
+
+        # Convert text to list of token IDs
+        tokens = [self.inverse_vocab[c] for c in text]
+
+        # Iteratively merge most frequent pairs
+        while len(self.vocab) < vocab_size:
+            pairs = self._count_pairs(tokens)
+            if not pairs:
+                break
+
+            best_pair = max(pairs, key=pairs.get)
+            new_id = len(self.vocab)
+
+            # Record the merge
+            self.merges[best_pair] = new_id
+            self.vocab[new_id] = self.vocab[best_pair[0]] + self.vocab[best_pair[1]]
+            self.inverse_vocab[self.vocab[new_id]] = new_id
+
+            # Apply merge to token list
+            tokens = self._apply_merge(tokens, best_pair, new_id)
 
     def encode(self, text):
-        """Apply learned merges to encode text."""
-        raise NotImplementedError
+        # Start with character-level IDs
+        tokens = [self.inverse_vocab[c] for c in text]
+
+        # Apply merges in the order they were learned
+        for pair, new_id in self.merges.items():
+            tokens = self._apply_merge(tokens, pair, new_id)
+
+        return tokens
 
     def decode(self, token_ids):
-        """Reverse the encoding back to text."""
-        raise NotImplementedError
+        return ''.join(self.vocab[id] for id in token_ids)
+
+    @property
+    def vocab_size(self):
+        return len(self.vocab)
+
+    def _count_pairs(self, tokens):
+        counts = {}
+        for i in range(len(tokens) - 1):
+            pair = (tokens[i], tokens[i + 1])
+            counts[pair] = counts.get(pair, 0) + 1
+        return counts
+
+    def _apply_merge(self, tokens, pair, new_id):
+        merged = []
+        i = 0
+        while i < len(tokens):
+            if i < len(tokens) - 1 and tokens[i] == pair[0] and tokens[i + 1] == pair[1]:
+                merged.append(new_id)
+                i += 2
+            else:
+                merged.append(tokens[i])
+                i += 1
+        return merged

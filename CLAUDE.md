@@ -49,15 +49,15 @@ SML/
 - [x] Verify gradients against PyTorch
 - [x] Build a simple neuron / MLP using Value
 - [x] Train on a toy problem (e.g., simple classification)
-- [ ] Visualize the computation graph
+- [ ] ~~Visualize the computation graph~~ (skipped)
 - [x] **Checkpoint**: Understand chain rule, computational graphs, gradient flow
 
 ### Phase 2: Tokenizer
-- [ ] Character-level tokenizer (encode/decode)
-- [ ] Load and preprocess a toy dataset (tiny Shakespeare)
-- [ ] Byte Pair Encoding (BPE) tokenizer from scratch
-- [ ] Vocab building and special tokens
-- [ ] **Checkpoint**: Understand how text becomes numbers for a model
+- [ ] ~~Character-level tokenizer~~ (skipped — went straight to BPE)
+- [x] Load and preprocess a toy dataset (tiny Shakespeare)
+- [x] Byte Pair Encoding (BPE) tokenizer from scratch
+- [x] Vocab building and special tokens
+- [x] **Checkpoint**: Understand how text becomes numbers for a model
 
 ### Phase 3: Transformer Architecture
 - [ ] Token embeddings and positional encodings
@@ -97,5 +97,5 @@ SML/
 ---
 
 ## Current Status
-**Phase**: Phase 1 nearly complete (graph visualization remaining)
-**Last completed**: Value autograd engine, gradient verification, Neuron/Layer/MLP, toy training loop converges
+**Phase**: Phase 3 — Transformer Architecture
+**Last completed**: Phase 2 complete (BPE tokenizer, tiny Shakespeare dataset downloaded)
